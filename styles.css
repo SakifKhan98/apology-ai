@@ -1,0 +1,82 @@
+:root{
+--bg:#f7f5f2; /* light sand */
+--ink:#111;
+--accent1:#e53935; /* red */
+--accent2:#1565c0; /* blue */
+--accent3:#f9a825; /* yellow */
+--card:#ffffff;
+--muted:#6b7280;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+margin:0;
+font-family: "Work Sans", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+background: var(--bg);
+color: var(--ink);
+}
+.container{
+min-height:100dvh;
+display:grid;
+grid-template-rows:auto 1fr auto;
+max-width:960px;
+margin:0 auto;
+padding: clamp(16px, 3vw, 32px);
+}
+.hero h1{
+font-family: Montserrat, sans-serif;
+font-size: clamp(40px, 9vw, 96px);
+line-height: .95;
+letter-spacing: -0.02em;
+margin: 24px 0 8px;
+display:flex; gap:.3em; flex-wrap:wrap; align-items:baseline;
+}
+.hero .sorry{font-weight:800; color:var(--accent1); text-shadow:0 2px 0 rgba(0,0,0,.05)}
+.hero .thin{font-weight:600}
+.tagline{color:var(--muted); margin:0 0 24px; font-size:clamp(16px,2.2vw,18px)}
+
+
+.counter-card{
+background:var(--card);
+border-radius:24px;
+box-shadow: 0 8px 24px rgba(0,0,0,.08);
+padding: clamp(20px, 4vw, 40px);
+display:grid; gap:20px; justify-items:center;
+}
+.label{font-weight:600; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; font-size:12px}
+.count{
+font-family: Montserrat, sans-serif;
+font-weight:800;
+font-size: clamp(56px, 10vw, 128px);
+letter-spacing:-.02em;
+}
+.btn{
+appearance:none; border:0; cursor:pointer; outline-offset:4px;
+background:linear-gradient(135deg, var(--accent2), var(--accent1));
+color:white; font-weight:700; font-size:clamp(16px,2.5vw,18px);
+padding:14px 24px; border-radius:999px;
+box-shadow: 0 8px 20px rgba(0,0,0,.12);
+transition: transform .06s ease, box-shadow .2s ease, filter .2s ease;
+}
+.btn:hover{transform:translateY(-1px); box-shadow:0 12px 26px rgba(0,0,0,.16)}
+.btn:active{transform:translateY(0); filter:saturate(1.15)}
+.btn[disabled]{opacity:.6; cursor:not-allowed}
+
+
+.status{min-height:1.2em; margin:0; color:var(--muted)}
+.footer{margin-top:40px; color:var(--muted); font-size:14px; text-align:center}
+
+
+/* Bauhaus geometric background */
+.bg-shapes{position:fixed; inset:0; overflow:hidden; z-index:-1}
+.shape{position:absolute; opacity:.08; filter:blur(0.3px)}
+.circle{width:48vmin; height:48vmin; border-radius:50%; background:var(--accent1); top:-8vmin; left:-8vmin}
+.square{width:36vmin; height:36vmin; background:var(--accent2); bottom:-10vmin; right:10vmin; transform:rotate(12deg)}
+.triangle{width:0;height:0;border-left:22vmin solid transparent;border-right:22vmin solid transparent;border-bottom:38vmin solid var(--accent3);bottom:-8vmin;left:-6vmin;transform:rotate(-8deg)}
+
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: no-preference){
+.count{transition: transform .15s ease}
+.count.bump{transform: scale(1.04)}
+}

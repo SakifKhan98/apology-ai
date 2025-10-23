@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sorry, Dr. Chowd</title>
+    <meta
+      name="description"
+      content="A playful global apology counter for Dr. Chowd"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Work+Sans:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/svg+xml" href="/public/favicon.svg" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="bg-shapes" aria-hidden="true">
+      <span class="shape circle"></span>
+      <span class="shape square"></span>
+      <span class="shape triangle"></span>
+    </div>
+
+    <main class="container">
+      <header class="hero">
+        <h1>
+          <span class="sorry">SORRY</span> <span class="thin">Dr. Chowd</span>
+        </h1>
+        <p class="tagline">
+          A tiny ritual of remorse due to everything we have said and done to
+          our beloved Dr. Chowd.
+        </p>
+      </header>
+
+      <section class="counter-card" aria-live="polite">
+        <div class="count-wrap">
+          <div class="label">Total apologies</div>
+          <div id="count" class="count">—</div>
+        </div>
+        <button
+          id="sorryBtn"
+          class="btn"
+          type="button"
+          aria-label="Say sorry to Dr. Chowd"
+        >
+          I’m Sorry
+        </button>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+      </section>
+
+      <footer class="footer">
+        <p>Made with ❤️ by SK.</p>
+      </footer>
+    </main>
+
+    <script src="/main.js" type="module"></script>
+    <!-- Add before closing </body> -->
+    <script type="module">
+      import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+      const SUPABASE_URL = 'https://mjkpioxpjiwmrpuvzvoj.supabase.co'
+      const SUPABASE_ANON_KEY =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qa3Bpb3hwaml3bXJwdXZ6dm9qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjExODI1ODIsImV4cCI6MjA3Njc1ODU4Mn0.y074LAx8c6jOt02Eu_mvCBxVNSIt7vNvkjezIm-Ptrs'
+      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+      const countEl = document.getElementById('count')
+      const btn = document.getElementById('sorryBtn')
+      const statusEl = document.getElementById('status')
+
+      async function loadCount() {
+        try {
+          const { data, error } = await supabase.rpc('get_apology_count')
+          if (error) throw error
+          renderCount(Number(data ?? 0))
+          statusEl.textContent = ''
+        } catch (e) {
+          statusEl.textContent = 'Could not load the current count.'
+          console.error(e)
+        }
+      }
+      function renderCount(n) {
+        countEl.textContent = new Intl.NumberFormat().format(n)
+        countEl.classList.remove('bump')
+        void countEl.offsetWidth
+        countEl.classList.add('bump')
+      }
+      document
+        .getElementById('sorryBtn')
+        .addEventListener('click', async () => {
+          btn.disabled = true
+          statusEl.textContent = 'Submitting your apology…'
+          try {
+            const { data, error } = await supabase.rpc('increment_apology')
+            if (error) throw error
+            renderCount(Number(data ?? 0))
+            statusEl.textContent = 'Apology recorded. Thank you!'
+          } catch (e) {
+            console.error(e)
+            statusEl.textContent = 'Something went wrong. Please try again.'
+          } finally {
+            btn.disabled = false
+          }
+        })
+
+      loadCount()
+    </script>
+  </body>
+</html>
